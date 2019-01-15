@@ -1,4 +1,4 @@
-import UsersListPage from './users-list';
+import UsersListPage from './usersList';
 import {connect} from 'react-redux';
 
 export default connect(({router}) => ({router}))(UsersListPage);

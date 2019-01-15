@@ -1,6 +1,7 @@
 import auth from '../../api/auth';
 import ls from '../../storage/localStorage';
 import Machine from '@qiwi/cyclone';
+import {AuthError} from "../../error/authError";
 
 const OK = 'ok';
 const LOADING = 'loading';
@@ -43,12 +44,8 @@ export default {
                 this.next(OK, jwt);
                 ls.setItem('jwt', jwt);
             } catch (err) {
-                let clientError;
-                if (err && err.response && err.response.json) {
-                    clientError = await err.response.json();
-                }
-                if (clientError && clientError.error === 'ERROR_LOGIN_FAILED') {
-                    this.next(AUTH_ERROR, {...clientError, message: 'Пожалуйста, проверьте введенные логин и пароль.'});
+                if (err instanceof AuthError && err.message === AuthError.BAD_CREDENTIALS) {
+                    this.next(AUTH_ERROR, {message: 'Пожалуйста, проверьте введенные логин и пароль.'});
                     return;
                 }
                 this.next(AUTH_ERROR, {...err, message: 'Что-то пошло не так'});

@@ -10,7 +10,7 @@ import ErrorBoundary from './common/ErrorBoundary';
 import Spreader from './common/Spreader';
 import {Redirect, Route, Switch} from 'react-router';
 import AuthPage from "./pages/auth";
-import UsersListPage from "./pages/users-list";
+import UsersListPage from "./pages/usersList";
 import {AuthLayout} from "./common/AuthLayout";
 
 class App extends Component {

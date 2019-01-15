@@ -1,5 +1,5 @@
 {
-  "name": "boilerplate-payin-architecture",
+  "name": "test-task-react-client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -25,12 +25,7 @@
     "redux-logger": "^3.0.6"
   },
   "scripts": {
-    "start": "react-scripts -r dotenv/config start dotenv_config_path=./config/localhost.env",
-    "build": "yarn build_kuber",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "qorsproxy": "sh proxy/run.sh proxy/localhost-to-test.json",
-    "build_kuber": "rm -rf build; NODE_ENV=production PUBLIC_URL=/ react-scripts -r dotenv/config build dotenv_config_path=./config/kuber.env"
+    "start": "react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"
