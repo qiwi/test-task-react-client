@@ -1,3 +1,3 @@
 export default {
-  apiUrl: 'http://localhost:2211/api/'
+  apiUrl: 'https://test-task.qiwi.tools:2211/api/'
 }
