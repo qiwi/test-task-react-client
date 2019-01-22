@@ -1,11 +1,11 @@
 import {HttpService} from '@qiwi/let-fly-at-http/build';
-import config from '../config'
+import config from '../config';
 
 export class LoginHttpClient extends HttpService {
     constructor() {
         super(config.apiUrl, {
             headers: {
-                accept: 'application/json',
+                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             credentials: 'include'

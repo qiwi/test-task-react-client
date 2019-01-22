@@ -12,8 +12,12 @@ const AUTH_SUBMITTING = 'auth_submitting';
 const machine = new Machine({
     initialState: INITIAL,
     initialData: {
-        jwt: {},
-        error: {}
+        auth: {
+            jwt: ''
+        },
+        error: {
+            userMessage: ''
+        }
     },
     transitions: {
         'init>loading': true,
@@ -46,7 +50,11 @@ export default {
             this.next(AUTH_SUBMITTING);
             try {
                 const jwt = await auth.login(email, password);
-                this.next(OK, {jwt});
+                this.next(OK, {
+                    auth: {
+                        jwt
+                    }
+                });
                 ls.setItem('jwt', jwt);
             } catch (err) {
                 if (err instanceof AuthError && err.code === AuthError.BAD_CREDENTIALS) {
