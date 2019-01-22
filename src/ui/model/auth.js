@@ -11,7 +11,10 @@ const AUTH_ERROR = 'login_error';
 const AUTH_SUBMITTING = 'auth_submitting';
 const machine = new Machine({
     initialState: INITIAL,
-    initialData: {},
+    initialData: {
+        jwt: {},
+        error: {}
+    },
     transitions: {
         'init>loading': true,
         'loading>ok': true,
@@ -43,14 +46,14 @@ export default {
             this.next(AUTH_SUBMITTING);
             try {
                 const jwt = await auth.login(email, password);
-                this.next(OK, jwt);
+                this.next(OK, {jwt});
                 ls.setItem('jwt', jwt);
             } catch (err) {
                 if (err instanceof AuthError && err.code === AuthError.BAD_CREDENTIALS) {
-                    this.next(AUTH_ERROR, {message: 'Пожалуйста, проверьте введенные логин и пароль.'});
+                    this.next(AUTH_ERROR, {error: {...err, userMessage: 'Пожалуйста, проверьте введенные логин и пароль.'}});
                     return;
                 }
-                this.next(AUTH_ERROR, {...err, message: 'Что-то пошло не так'});
+                this.next(AUTH_ERROR, {error: {...err, userMessage: 'Что-то пошло не так'}});
             }
         },
         async checkAuth() {
@@ -87,6 +90,11 @@ export default {
         authSubmitting() {
             return slice(auth => {
                 return auth.state === AUTH_SUBMITTING;
+            })
+        },
+        errorMessage() {
+            return slice(auth => {
+                return (auth.data && auth.data.error && auth.data.error.userMessage) || undefined;
             })
         }
     })

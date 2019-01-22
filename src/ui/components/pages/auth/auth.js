@@ -88,7 +88,7 @@ export class AuthPage extends React.Component {
                             <HeaderLabel>Вход</HeaderLabel>
                             <Field autoFocus={true} name='email' component={EmailField} disabled={this.props.authSubmitting}/>
                             <Field name={'password'} component={PasswordCustomField} disabled={this.props.authSubmitting}
-                                   error={this.props.loginError ? this.props.auth.data.message : ''}
+                                   error={this.props.errorMessage}
                             />
                             <ButtonContainer>
                                 <Button type='submit'
