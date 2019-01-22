@@ -1,9 +1,7 @@
 import {AuthError} from "../../error/authError";
 import {LoginHttpClient} from "../loginHttpClient";
 
-const API_CODE_TO_AUTH_ERROR_CODE = {
-    'ERROR_LOGIN_FAILED': AuthError.BAD_CREDENTIALS
-};
+const ERROR_LOGIN_FAILED = 'ERROR_LOGIN_FAILED';
 
 export class AuthApiService {
     constructor() {
@@ -22,7 +20,12 @@ export class AuthApiService {
             if (err && err.response && err.response.json) {
                 errorBody = await err.response.json();
             }
-            throw new AuthError(API_CODE_TO_AUTH_ERROR_CODE[errorBody && errorBody.error], errorBody);
+            switch (errorBody && errorBody.error) {
+                case ERROR_LOGIN_FAILED:
+                    throw new AuthError(AuthError.BAD_CREDENTIALS, errorBody);
+                default:
+                    throw new AuthError(AuthError.API_ERROR, errorBody);
+            }
         }
 
     }
