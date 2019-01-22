@@ -5,5 +5,6 @@ import {select} from "../../../model";
 export default connect((state) => ({
     auth: state.auth,
     authSubmitting: select.auth.authSubmitting(state),
-    loginError: select.auth.loginError(state)
+    loginError: select.auth.loginError(state),
+    errorMessage: select.auth.errorMessage(state)
 }))(AuthPage);

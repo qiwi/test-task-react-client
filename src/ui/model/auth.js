@@ -1,4 +1,4 @@
-import auth from '../../api/auth';
+import {AuthApiService} from '../../api/auth';
 import ls from '../../storage/localStorage';
 import Machine from '@qiwi/cyclone';
 import {AuthError} from "../../error/authError";
@@ -11,7 +11,14 @@ const AUTH_ERROR = 'login_error';
 const AUTH_SUBMITTING = 'auth_submitting';
 const machine = new Machine({
     initialState: INITIAL,
-    initialData: {},
+    initialData: {
+        auth: {
+            jwt: ''
+        },
+        error: {
+            userMessage: ''
+        }
+    },
     transitions: {
         'init>loading': true,
         'loading>ok': true,
@@ -22,6 +29,8 @@ const machine = new Machine({
         'auth_submitting>ok': (state, res) => res
     }
 });
+
+const auth = new AuthApiService();
 
 export default {
     state: machine.current(),
@@ -41,14 +50,18 @@ export default {
             this.next(AUTH_SUBMITTING);
             try {
                 const jwt = await auth.login(email, password);
-                this.next(OK, jwt);
+                this.next(OK, {
+                    auth: {
+                        jwt
+                    }
+                });
                 ls.setItem('jwt', jwt);
             } catch (err) {
-                if (err instanceof AuthError && err.message === AuthError.BAD_CREDENTIALS) {
-                    this.next(AUTH_ERROR, {message: 'Пожалуйста, проверьте введенные логин и пароль.'});
+                if (err instanceof AuthError && err.code === AuthError.BAD_CREDENTIALS) {
+                    this.next(AUTH_ERROR, {error: {...err, userMessage: 'Пожалуйста, проверьте введенные логин и пароль.'}});
                     return;
                 }
-                this.next(AUTH_ERROR, {...err, message: 'Что-то пошло не так'});
+                this.next(AUTH_ERROR, {error: {...err, userMessage: 'Что-то пошло не так'}});
             }
         },
         async checkAuth() {
@@ -85,6 +98,11 @@ export default {
         authSubmitting() {
             return slice(auth => {
                 return auth.state === AUTH_SUBMITTING;
+            })
+        },
+        errorMessage() {
+            return slice(auth => {
+                return (auth.data && auth.data.error && auth.data.error.userMessage) || undefined;
             })
         }
     })

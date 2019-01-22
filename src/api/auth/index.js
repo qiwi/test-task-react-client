@@ -1,34 +1,31 @@
-import {HttpService} from '@qiwi/let-fly-at-http';
-import config from '../../config';
 import {AuthError} from "../../error/authError";
-
-const httpClient = new HttpService(config.apiUrl, {
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    credentials: 'include'
-});
+import {LoginHttpClient} from "../loginHttpClient";
 
 const ERROR_LOGIN_FAILED = 'ERROR_LOGIN_FAILED';
 
-export default {
+export class AuthApiService {
+    constructor() {
+        this.client = new LoginHttpClient();
+    }
+
     async login(email, password) {
         try {
-            const apiResponse = await httpClient.post('public/auth/login', {
+            const apiResponse = await this.client.post('public/auth/login', {
                 email,
                 password
             });
             return apiResponse.result;
         } catch (err) {
-            let responseBody;
+            let errorBody;
             if (err && err.response && err.response.json) {
-                responseBody = await err.response.json();
+                errorBody = await err.response.json();
             }
-            if (responseBody && responseBody.error === ERROR_LOGIN_FAILED) {
-                throw new AuthError(AuthError.BAD_CREDENTIALS);
+            switch (errorBody && errorBody.error) {
+                case ERROR_LOGIN_FAILED:
+                    throw new AuthError(AuthError.BAD_CREDENTIALS, errorBody);
+                default:
+                    throw new AuthError(AuthError.API_ERROR, errorBody);
             }
-            throw new AuthError(AuthError.API_ERROR);
         }
 
     }
