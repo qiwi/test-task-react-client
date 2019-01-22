@@ -1,4 +1,4 @@
-import auth from '../../api/auth';
+import {AuthApiService} from '../../api/auth';
 import ls from '../../storage/localStorage';
 import Machine from '@qiwi/cyclone';
 import {AuthError} from "../../error/authError";
@@ -23,6 +23,8 @@ const machine = new Machine({
     }
 });
 
+const auth = new AuthApiService();
+
 export default {
     state: machine.current(),
     reducers: {
@@ -44,7 +46,7 @@ export default {
                 this.next(OK, jwt);
                 ls.setItem('jwt', jwt);
             } catch (err) {
-                if (err instanceof AuthError && err.message === AuthError.BAD_CREDENTIALS) {
+                if (err instanceof AuthError && err.code === AuthError.BAD_CREDENTIALS) {
                     this.next(AUTH_ERROR, {message: 'Пожалуйста, проверьте введенные логин и пароль.'});
                     return;
                 }
