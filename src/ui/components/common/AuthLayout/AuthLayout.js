@@ -4,13 +4,14 @@ import {Loader} from "../Loader";
 
 export class AuthLayout extends Component {
     render() {
-        if (this.props.loggedIn) {
+        const {isLoggedIn, isLoading, isInitial} = this.props;
+        if (isLoggedIn) {
             if (this.isAuthRoute()) {
                 return <Redirect to={'/'}/>
             }
             return <div>{this.props.children}</div>
         } else {
-            if (this.props.loading || this.props.initial) {
+            if (isLoading || isInitial) {
                 return <Loader/>
             } else if (this.isAuthRoute()) {
                 return this.props.children;
@@ -21,7 +22,7 @@ export class AuthLayout extends Component {
     }
 
     componentDidMount() {
-        if (this.props.initial) this.props.dispatch.auth.checkAuth();
+        if (this.props.isInitial) this.props.checkAuth();
     }
 
     isAuthRoute() {

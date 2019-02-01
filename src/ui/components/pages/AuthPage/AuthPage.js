@@ -51,13 +51,14 @@ const PasswordCustomField = ({
 export class AuthPage extends React.Component {
 
     submitFormHandler(values) {
-        this.props.dispatch.auth.login({
+        this.props.login({
             email: values.email,
             password: values.password
         });
     }
 
     render() {
+        const {isAuthSubmitting, getErrorMessage} = this.props;
         return (
             <AuthFormViewContainer>
                 <Form
@@ -86,9 +87,9 @@ export class AuthPage extends React.Component {
                              }) => (
                         <form>
                             <HeaderLabel>Вход</HeaderLabel>
-                            <Field autoFocus={true} name='email' component={EmailField} disabled={this.props.authSubmitting}/>
-                            <Field name={'password'} component={PasswordCustomField} disabled={this.props.authSubmitting}
-                                   error={this.props.errorMessage}
+                            <Field autoFocus={true} name='email' component={EmailField} disabled={isAuthSubmitting}/>
+                            <Field name={'password'} component={PasswordCustomField} disabled={isAuthSubmitting}
+                                   error={getErrorMessage}
                             />
                             <ButtonContainer>
                                 <Button type='submit'
@@ -96,11 +97,11 @@ export class AuthPage extends React.Component {
                                         size='normal'
                                         text='Войти'
                                         onClick={() => {
-                                            if (invalid || this.props.authSubmitting) return;
+                                            if (invalid || isAuthSubmitting) return;
                                             handleSubmit(arguments);
                                         }}
-                                        disabled={invalid || this.props.authSubmitting}
-                                        loading={this.props.authSubmitting}
+                                        disabled={invalid || isAuthSubmitting}
+                                        loading={isAuthSubmitting}
                                 />
                             </ButtonContainer>
                         </form>)

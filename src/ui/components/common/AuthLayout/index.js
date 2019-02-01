@@ -1,3 +1,3 @@
-import AuthLayout from "./auth_layout.connect";
+import AuthLayout from "./AuthLayout.connect";
 
 export {AuthLayout};

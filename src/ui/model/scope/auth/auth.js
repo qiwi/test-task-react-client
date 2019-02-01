@@ -1,7 +1,7 @@
-import {AuthApiService} from '../../api/auth';
-import ls from '../../storage/localStorage';
+import {AuthApiService} from '../../../../api/auth';
+import ls from '../../../../storage/localStorage';
 import Machine from '@qiwi/cyclone';
-import {AuthError} from "../../error/authError";
+import {AuthError} from "../../../../error/authError";
 
 const OK = 'ok';
 const LOADING = 'loading';
@@ -35,12 +35,6 @@ const auth = new AuthApiService();
 export default {
     state: machine.current(),
     reducers: {
-        logout() {
-            ls.removeItem('jwt');
-            return {
-                status: NOT_AUTH
-            }
-        },
         next(prev, next, ...payload) {
             return machine.next(next, ...payload).current()
         }
@@ -64,43 +58,46 @@ export default {
                 this.next(AUTH_ERROR, {error: {...err, userMessage: 'Что-то пошло не так'}});
             }
         },
-        async checkAuth() {
+        checkAuth() {
             this.next(LOADING);
             let jwt = ls.getItem('jwt');
             if (!jwt) {
-                this.logout();
-                return this.next(NOT_AUTH);
+               return this.logout();
             }
             this.next(OK);
+        },
+        logout() {
+            ls.removeItem('jwt');
+            return this.next(NOT_AUTH);
         }
     },
     selectors: (slice, createSelector, hasProps) => ({
-        loading() {
+        isLoading() {
             return slice(auth => {
                 return auth.state === LOADING
             });
         },
-        loggedIn() {
+        isLoggedIn() {
             return slice(auth => {
                 return auth.state === OK;
             })
         },
-        initial() {
+        isInitial() {
             return slice(auth => {
                 return auth.state === INITIAL;
             })
         },
-        loginError() {
+        isLoginError() {
             return slice(auth => {
                 return auth.state === AUTH_ERROR;
             })
         },
-        authSubmitting() {
+        isAuthSubmitting() {
             return slice(auth => {
                 return auth.state === AUTH_SUBMITTING;
             })
         },
-        errorMessage() {
+        getErrorMessage() {
             return slice(auth => {
                 return (auth.data && auth.data.error && auth.data.error.userMessage) || undefined;
             })

@@ -2,7 +2,7 @@ import {init} from '@rematch/core';
 import {logger} from 'redux-logger';
 import history from '../../storage/history';
 import {routerMiddleware, routerReducer} from './router';
-import auth from './auth';
+import auth from './scope/auth/auth';
 import selectPlugin from '@rematch/select';
 
 const middlewares = [routerMiddleware];

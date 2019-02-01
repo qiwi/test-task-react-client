@@ -16,6 +16,7 @@
     "email-validator": "^2.0.4",
     "final-form": "^4.11.0",
     "history": "^4.7.2",
+    "lodash.mapvalues": "^4.6.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-final-form": "^4.0.2",

@@ -9,8 +9,8 @@ import {history, store} from '../model/';
 import ErrorBoundary from './common/ErrorBoundary';
 import Spreader from './common/Spreader';
 import {Redirect, Route, Switch} from 'react-router';
-import AuthPage from "./pages/auth";
-import UsersListPage from "./pages/usersList";
+import {AuthPage} from "./pages/AuthPage";
+import {UsersListPage} from "./pages/UsersListPage";
 import {AuthLayout} from "./common/AuthLayout";
 
 class App extends Component {
@@ -25,7 +25,9 @@ class App extends Component {
                                     <Switch>
                                         <Route exact path='/auth' component={() => {
                                             return (
-                                                <AuthLayout> <AuthPage/> </AuthLayout>
+                                                <AuthLayout>
+                                                    <AuthPage/>
+                                                </AuthLayout>
                                             )
                                         }}/>
                                         <Route exact path='/users' component={() => {
